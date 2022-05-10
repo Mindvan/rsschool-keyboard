@@ -1118,5 +1118,5 @@ document.onkeydown = function (event) {
 
 const info = document.createElement('div');
 info.className = 'info';
-info.innerText += 'Клавиатура была создана в операционной системе Windows\nСмена языка: Ctrl + Shift';
+info.innerText += 'Клавиатура была создана в операционной системе Windows\nСмена языка: AltLeft + ShiftLeft';
 document.getElementById('container').appendChild(info);
