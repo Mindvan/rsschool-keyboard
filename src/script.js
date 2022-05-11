@@ -889,47 +889,74 @@ const square = (arr) => {
 };
 
 function layout() {
-  for (let i = 0; i < keys.length; i++) {
+  for (let i = 0; i < keys.length; i += 1) {
     document.getElementById('keyboard').append(square(keys[i]));
   }
 }
 
 function consoleKey(key) {
-  textArea.textContent += key;
+  const field = document.getElementById('textarea');
+  const startPos = field.selectionStart;
+  const endPos = field.selectionEnd;
+  const fieldVal = field.value;
+
+  field.value = fieldVal.substring(0, startPos) + key + fieldVal.substring(endPos, fieldVal.length);
+  field.setSelectionRange(startPos + 1, endPos + 1);
+  field.focus();
 }
 
 function toShiftOn() {
-  document.querySelectorAll('.square').forEach((el, i) => {
-    isRu ? el.textContent = keys[i].ru.shiftOn : el.textContent = keys[i].en.shiftOn;
+  document.querySelectorAll('.square').forEach((element, i) => {
+    const el = element;
+    if (isRu) {
+      el.textContent = keys[i].ru.shiftOn;
+    } else {
+      el.textContent = keys[i].en.shiftOn;
+    }
   });
   isShift = true;
 }
 
 function toShiftOff() {
-  document.querySelectorAll('.square').forEach((el, i) => {
-    isRu ? el.textContent = keys[i].ru.shiftOff : el.textContent = keys[i].en.shiftOff;
+  document.querySelectorAll('.square').forEach((element, i) => {
+    const el = element;
+    if (isRu) {
+      el.textContent = keys[i].ru.shiftOff;
+    } else {
+      el.textContent = keys[i].en.shiftOff;
+    }
   });
   isShift = false;
 }
 
 function toCapsOn() {
-  document.querySelectorAll('.square').forEach((el, i) => {
-    isRu ? el.textContent = keys[i].ru.capslockOn : el.textContent = keys[i].en.capslockOn;
+  document.querySelectorAll('.square').forEach((element, i) => {
+    const el = element;
+    if (isRu) {
+      el.textContent = keys[i].ru.capslockOn;
+    } else {
+      el.textContent = keys[i].en.capslockOn;
+    }
   });
   isCaps = true;
 }
 
 function toCapsOff() {
-  document.querySelectorAll('.square').forEach((el, i) => {
-    isRu ? el.textContent = keys[i].ru.shiftOff : el.textContent = keys[i].en.shiftOff;
+  document.querySelectorAll('.square').forEach((element, i) => {
+    const el = element;
+    if (isRu) {
+      el.textContent = keys[i].ru.shiftOff;
+    } else {
+      el.textContent = keys[i].en.shiftOff;
+    }
   });
   isCaps = false;
 }
 
+// cursor();
 layout();
 
 const SQUARES = document.querySelectorAll('.square');
-const BACKSPACE = document.querySelector('#backspace');
 
 document.addEventListener('keyup', (event) => {
   SQUARES.forEach((element) => {
@@ -946,20 +973,21 @@ const CAPSLOCK = document.querySelector('#capslock');
 const SHIFT_LEFT = document.querySelector('#shiftleft');
 const SHIFT_RIGHT = document.querySelector('#shiftright');
 
-document.querySelectorAll('.square').forEach((element) => {
-  element.onclick = function (event) {
+document.querySelectorAll('.square').forEach((elem) => {
+  const element = elem;
+  element.onclick = function func(event) {
     document.querySelectorAll('.square').forEach((el) => {
       el.classList.remove('active');
     });
-
     const id = this.getAttribute('id');
-    const textSelector = document.querySelector(`.square[id="${id}"`);
     const textContentId = document.querySelector(`.square[id="${id}"`).textContent;
+    const text = document.getElementById('textarea');
     if ((textContentId !== 'CapsLock') && (textContentId !== 'Alt') && (textContentId !== 'Ctrl') && (textContentId !== 'Win')
             && (textContentId !== 'ShiftLeft') && (textContentId !== 'ShiftRight') && (textContentId !== 'Meta') && (textContentId !== 'Enter')
             && (textContentId !== 'Tab') && (textContentId !== 'Backspace') && (textContentId !== 'Delete')) {
       keys.filter((neededKey) => {
         if (neededKey.code.toLowerCase() === id) {
+          text.focus();
           if ((!isShift) && (!isCaps)) {
             if (isRu) {
               consoleKey(neededKey.ru.shiftOff);
@@ -984,6 +1012,7 @@ document.querySelectorAll('.square').forEach((element) => {
             consoleKey(neededKey.en.shiftOn);
           }
         }
+        return neededKey;
       });
     }
     if (textContentId === 'CapsLock') {
@@ -993,30 +1022,30 @@ document.querySelectorAll('.square').forEach((element) => {
       toShiftOn();
     }
     if (textContentId === 'Enter') {
-      const text = document.getElementById('textarea');
       text.focus();
       event.preventDefault();
       text.setSelectionRange(text.selectionStart, text.selectionStart);
       text.setRangeText('\n');
+      // consoleKey(text);
     }
     if (textContentId === 'Tab') {
-      const text = document.getElementById('textarea');
       text.focus();
       event.preventDefault();
       text.setSelectionRange(text.selectionStart, text.selectionStart);
       text.setRangeText('\t');
     }
     if (textContentId === 'Backspace') {
-      const text = document.getElementById('textarea');
       text.focus();
       text.setSelectionRange(text.selectionStart - 1, text.selectionStart);
       text.setRangeText('');
     }
     if (textContentId === 'Delete') {
-      const text = document.getElementById('textarea');
       text.focus();
       text.setSelectionRange(text.selectionStart, text.selectionStart + 1);
       text.setRangeText('');
+    }
+    if (textContentId === 'Space') {
+      consoleKey(' ');
     }
 
     this.classList.add('active');
@@ -1058,7 +1087,7 @@ document.querySelectorAll('.square').forEach((element) => {
   };
 });
 
-document.onkeydown = function (event) {
+document.onkeydown = function clck(event) {
   document.querySelectorAll('.square').forEach((el) => {
     if ((el.textContent !== 'CapsLock') && (el.textContent !== 'Alt') && (el.textContent !== 'Ctrl') && (el.textContent !== 'Win')
             && (el.textContent !== 'ShiftLeft') && (el.textContent !== 'ShiftRight') && (el.textContent !== 'Meta') && (el.textContent !== 'Enter')
@@ -1078,7 +1107,11 @@ document.onkeydown = function (event) {
   document.querySelector(`.square[id="${event.code.toLowerCase().toString()}"]`).classList.add('active');
 
   if ((event.shiftKey) && (event.altKey)) {
-    !isRu ? isRu = true : isRu = false;
+    if (!isRu) {
+      isRu = true;
+    } else {
+      isRu = false;
+    }
 
     LocalStorage.setLang(isRu);
 
@@ -1101,12 +1134,11 @@ document.onkeydown = function (event) {
         if (neededKey.code === event.key) {
           consoleKey(neededKey.en.shiftOff);
         }
+        return neededKey;
       });
     } else if (event.key === 'Tab') {
       event.preventDefault();
       consoleKey('\t');
-    } else if (event.key === 'Tab') {
-      event.preventDefault();
     } else if (event.key === 'Enter') {
       consoleKey('\n');
     } else {
