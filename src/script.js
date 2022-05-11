@@ -953,7 +953,6 @@ function toCapsOff() {
   isCaps = false;
 }
 
-// cursor();
 layout();
 
 const SQUARES = document.querySelectorAll('.square');
@@ -1025,14 +1024,13 @@ document.querySelectorAll('.square').forEach((elem) => {
       text.focus();
       event.preventDefault();
       text.setSelectionRange(text.selectionStart, text.selectionStart);
-      text.setRangeText('\n');
-      // consoleKey(text);
+      consoleKey('\n');
     }
     if (textContentId === 'Tab') {
       text.focus();
       event.preventDefault();
       text.setSelectionRange(text.selectionStart, text.selectionStart);
-      text.setRangeText('\t');
+      consoleKey('\t');
     }
     if (textContentId === 'Backspace') {
       text.focus();
